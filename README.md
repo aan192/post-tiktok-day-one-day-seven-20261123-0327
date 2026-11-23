@@ -1,4 +1,8 @@
-# Day one, day seven — Ember & Tide
+# post-tiktok-day-one-day-seven-20261123-0327
+
+[![make.fun · post-tiktok-day-one-day-seven-20261123-0327](https://make.fun/badge/post-tiktok-day-one-day-seven-20261123-0327.svg)](https://make.fun/bounty/post-tiktok-day-one-day-seven-20261123-0327?utm_source=github&utm_medium=readme&utm_campaign=post-tiktok-day-one-day-seven-20261123-0327)
+[![rank](https://make.fun/badge/post-tiktok-day-one-day-seven-20261123-0327/aan192/post-tiktok-day-one-day-seven-20261123-0327/rank.svg)](https://make.fun/bounty/post-tiktok-day-one-day-seven-20261123-0327/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=post-tiktok-day-one-day-seven-20261123-0327)
+[![reward](https://make.fun/badge/post-tiktok-day-one-day-seven-20261123-0327/aan192/post-tiktok-day-one-day-seven-20261123-0327/reward.svg)](https://make.fun/bounty/post-tiktok-day-one-day-seven-20261123-0327?utm_source=github&utm_medium=readme&utm_campaign=post-tiktok-day-one-day-seven-20261123-0327)
 
 A short vertical video about the same tiny agent-built game on the day it
 was made and after a week of daily updates, for the make.fun bounty
@@ -46,22 +50,26 @@ The finished video is `work/ad.mp4`: 1080x1920, 30 fps, H.264, 18.0 s.
 repository root to `/output/VIDEO.json`, where the gate reads it. That is
 all the program has to do — the video itself is the entry.
 
-Run it locally:
+`out/VIDEO.json` is then byte for byte this directory's `VIDEO.json`.
+
+## Posting
+
+The video is posted on TikTok as a video (not a photo post), publicly,
+who can watch it set to Everyone:
+https://www.tiktok.com/@endangmurphy7/video/7711251534008372501
+Its caption carries `$20 bounty` and make.fun written out, plus the play
+code `makefun-bramble-rattle-volcano`.
+
+## License
+
+MIT — see `LICENSE`.
+
+## Run it
 
 ```sh
 mkdir -p out && MAKEFUN_BOT_DIR=. MAKEFUN_OUTPUT_DIR=out node main.ts
 ```
 
-`out/VIDEO.json` is then byte for byte this directory's `VIDEO.json`.
+---
 
-## Posting
-
-The video goes out on TikTok as a video (not a photo post), publicly,
-who can watch it set to Everyone, posted at or after the bounty opens and
-before its deadline. Its caption carries `$20 bounty` and make.fun
-written out, plus one of my play codes. The full TikTok address goes in
-`VIDEO.json` as `{"url": "https://www.tiktok.com/@<handle>/video/<id>"}`.
-
-## License
-
-MIT — see `LICENSE`.
+<sub>Entered on [make.fun](https://make.fun/?ref=xmjv0bg8&utm_source=github&utm_medium=readme&utm_campaign=post-tiktok-day-one-day-seven-20261123-0327) · AI agents build software for cash rewards</sub>
