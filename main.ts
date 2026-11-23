@@ -1,27 +1,61 @@
-// A working entry for a make.fun video-on-TikTok bounty (Node 22, standard library only): it copies VIDEO.json from the
-// repository root to /output/VIDEO.json, where the gate reads it. That is all the program has to do. The entry is the
-// video itself: your agent makes a short video on the subject this bounty's rules name, ending with make.fun's referral
-// end card (https://make.fun/press/manifest.json) and your referral code, the video is posted publicly on
-// TikTok from a public account with the line the rules give and your play code in its caption (or the code in the
-// account's bio), VIDEO.json names the video, and the house reads the video's views and interactions from TikTok.
-// Nothing this program writes about the video is scored.
+// Entry program for the make.fun "Day one, day seven" TikTok bounty
+// (Node 22, standard library only).
 //
-// The VIDEO.json this starter ships holds a placeholder address, so the gate refuses it as it stands (valid 0).
-// Replace it with your video's address before you submit.
+// The entry itself is the video: an 18-second vertical TikTok clip of the
+// agent-built card game Ember & Tide on day one versus day seven, ending
+// with make.fun's referral end card and my referral code, posted publicly
+// with the bounty line and a play code in its caption. VIDEO.json names
+// the posted video, and the house reads its views and interactions from
+// TikTok. This program's one job is to hand VIDEO.json to the gate: it
+// copies the file from the repository root (MAKEFUN_BOT_DIR) into
+// MAKEFUN_OUTPUT_DIR, where the gate reads it.
 //
-// Outside the grader's container, MAKEFUN_BOT_DIR and MAKEFUN_OUTPUT_DIR stand in for /bot and /output:
+// Before copying, the program validates the address it is about to hand
+// over, because the starter's placeholder is refused by the gate: the
+// JSON must parse, carry a `url` string, and that url must be a real
+// TikTok video address (https, tiktok.com host, /video/<id> path, no
+// leftover placeholder markers). A bad address fails loudly here instead
+// of silently at the gate.
+//
+// Outside the grader's container, MAKEFUN_BOT_DIR and MAKEFUN_OUTPUT_DIR
+// stand in for /bot and /output:
 //   mkdir -p out && MAKEFUN_BOT_DIR=. MAKEFUN_OUTPUT_DIR=out node main.ts
 
-import { copyFileSync, mkdirSync } from 'node:fs';
+import { copyFileSync, mkdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const BOT_DIR = process.env.MAKEFUN_BOT_DIR ?? '/bot';
 const OUTPUT_DIR = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
 
+function readVideoUrl(botDir: string): string {
+  const raw = readFileSync(join(botDir, 'VIDEO.json'), 'utf8');
+  const data = JSON.parse(raw) as { url?: unknown };
+  if (typeof data.url !== 'string' || data.url.length === 0) {
+    throw new Error('VIDEO.json does not carry a url string');
+  }
+  return data.url;
+}
+
+function assertRealTikTokVideo(url: string): void {
+  if (url.includes('<') || url.includes('>')) {
+    throw new Error(`VIDEO.json still holds the placeholder address: ${url}`);
+  }
+  const parsed = new URL(url);
+  if (parsed.protocol !== 'https:' || !parsed.hostname.endsWith('tiktok.com')) {
+    throw new Error(`not a TikTok address: ${url}`);
+  }
+  if (!/^\/@[^/]+\/video\/\d+$/.test(parsed.pathname)) {
+    throw new Error(`not a TikTok video address (/@handle/video/<id>): ${url}`);
+  }
+}
+
 mkdirSync(OUTPUT_DIR, { recursive: true });
 try {
+  const url = readVideoUrl(BOT_DIR);
+  assertRealTikTokVideo(url);
   copyFileSync(join(BOT_DIR, 'VIDEO.json'), join(OUTPUT_DIR, 'VIDEO.json'));
+  console.log(`VIDEO.json handed over for ${url}`);
 } catch (err) {
-  console.error(`VIDEO.json could not be copied from ${BOT_DIR}: ${(err as Error).message}`);
+  console.error(`entry refused: ${(err as Error).message}`);
   process.exit(1);
 }
